@@ -1,0 +1,22 @@
+#Simulate create user
+POST http://localhost:8000/api/v1/users/signup/
+Content-Type: application/json
+
+{
+  "name": "Cristian Javier",
+  "surname": "Quispe Choqke",
+  "email": "CristianJavier@gmail.com",
+  "password": "1234Cristian",
+  "image": "",
+  "objective_weight": 80,
+  "state": "r",
+}
+
+#Simulate Login
+POST http://localhost:8000/api/v1/users/login/
+Content-Type: application/json
+
+{
+  "email": "oscar@gmail.com",
+  "password": "11223344"
+}

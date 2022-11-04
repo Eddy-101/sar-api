@@ -22,7 +22,6 @@ class UserCondition(models.Model):
     def __str__(self): 
         return f"{self.id} - {self.date}"
 
-    
 class User(AbstractBaseUser, PermissionsMixin):
     state_choices = (
         ('s', 'Saludable'),
