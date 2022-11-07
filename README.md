@@ -31,7 +31,7 @@ antes de ejecutar el proyecto ejecute el siguiente comando:
 
 para realizar la creacion de la base de datos utilice el comando:
 
-> python ./manage.py makemigrations
+> python ./manage.py makemigrations <br />
 > python ./manage.py migrate
 
 ---
