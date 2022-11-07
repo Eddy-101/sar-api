@@ -6,8 +6,8 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework import status
 
 from django.contrib.auth import authenticate
-from .serializers import UserSerializer
-from .models import User
+from .serializers import (UserSerializer, StatusSerializer) 
+from .models import (User, Status) 
 
 # Create your views here.
 class ListUsers(APIView):
@@ -15,7 +15,6 @@ class ListUsers(APIView):
         users = User.objects.all()
         serializer = UserSerializer(users, many=True)
 
-        print(request.user)
         if not serializer.is_valid:
             return Response({'error': '404 error'})
         return  Response({'users': serializer.data})
@@ -30,10 +29,18 @@ class LoginUser(APIView):
         if user is not None:
             response = {
                 "message": "Login Succesfull",
-                "token": user.auth_token.key 
+                "token": user.auth_token.key ,
             }
             return Response(data=response, status=status.HTTP_200_OK)
         return Response(data={'message': 'Invalid email or password'})
+
+class UserView(APIView):
+    serializer_class = UserSerializer
+    def get(self, request: Request):
+        user = User.objects.get(id=1)
+        serializer = self.serializer_class(instance=user, many=False)
+
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 class SignUp(APIView):
     serializer_class = UserSerializer
@@ -54,9 +61,23 @@ class SignUp(APIView):
 
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class ListByUser(APIView):
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = [IsAuthenticated]
+class StatusView(APIView):
+    serializer_class = StatusSerializer
 
-    def get(self, request, format=None):
-        return 
+    def get(self, request: Request):
+        all_status = Status.objects.all()
+        serializer = self.serializer_class(all_status, many=True)
+
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request: Request):
+        data = request.data
+
+        serializer = self.serializer_class(data=data, many=False)
+
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
